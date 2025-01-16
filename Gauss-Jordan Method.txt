@@ -1,0 +1,55 @@
+/*
+Write a program to find a solution of linear algebraic equations using Gauss Jordan method.
+*/
+#include <stdio.h>
+
+void gaussJordan(int n, double a[n][n+1]) {
+    for (int i = 0; i < n; i++) {
+        double pivot = a[i][i];
+        for (int j = 0; j <= n; j++) {
+            a[i][j] /= pivot;
+        }
+
+        for (int k = 0; k < n; k++) {
+            if (k != i) {
+                double ratio = a[k][i];
+                for (int j = 0; j <= n; j++) {
+                    a[k][j] -= ratio * a[i][j];
+                }
+            }
+        }
+    }
+
+    printf("Solution:\n");
+    for (int i = 0; i < n; i++) {
+        printf("x%d = %.6f\n", i + 1, a[i][n]);
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of variables: ");
+    scanf("%d", &n);
+
+    double a[n][n+1];
+    printf("Enter the augmented matrix (row by row):\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++) {
+            scanf("%lf", &a[i][j]);
+        }
+    }
+
+    gaussJordan(n, a);
+    return 0;
+}
+/*
+Enter the number of variables: 3
+Enter the augmented matrix (row by row):
+2 1 -1 8
+-3 -1 2 -11
+-2 1 2 -3
+Solution:
+x1 = 2.000000
+x2 = 3.000000
+x3 = -1.000000
+*/

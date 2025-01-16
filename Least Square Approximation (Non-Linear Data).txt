@@ -1,0 +1,45 @@
+/*
+Write a program to implement least square approximation for non- linear data.
+*/
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int n;
+    printf("Enter the number of data points: ");
+    scanf("%d", &n);
+
+    double x[n], y[n], sumX = 0, sumY = 0, sumX2 = 0, sumX3 = 0, sumX4 = 0, sumXY = 0, sumX2Y = 0;
+    double a, b, c;
+
+    printf("Enter the data points (x and y values):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%lf %lf", &x[i], &y[i]);
+        sumX += x[i];
+        sumY += y[i];
+        sumX2 += x[i] * x[i];
+        sumX3 += x[i] * x[i] * x[i];
+        sumX4 += x[i] * x[i] * x[i] * x[i];
+        sumXY += x[i] * y[i];
+        sumX2Y += x[i] * x[i] * y[i];
+    }
+
+    double denom = n * sumX2 * sumX4 + 2 * sumX * sumX2 * sumX3 - sumX2 * sumX2 * sumX2 - n * sumX3 * sumX3;
+    a = (sumY * sumX2 * sumX4 + sumX * sumXY * sumX3 + sumX2Y * sumX2 * sumX - sumXY * sumX2 * sumX2 - sumX3 * sumX2Y) / denom;
+    b = (n * sumXY * sumX4 + sumX * sumY * sumX3 + sumX2Y * sumX * sumX - n * sumX2 * sumX2Y - sumX3 * sumX2 * sumY) / denom;
+    c = (n * sumX2 * sumX2Y + sumX * sumY * sumX3 + sumX2 * sumXY * sumX - sumX2 * sumX2 * sumY - sumX * sumXY * sumX2) / denom;
+
+    printf("The least squares quadratic equation is y = %.2fx^2 + %.2fx + %.2f\n", a, b, c);
+    return 0;
+}
+
+/*
+Enter the number of data points: 3
+Enter the data points (x and y values):
+1 2
+2 4
+3 6
+
+output
+The least squares quadratic equation is y = 0.00x^2 + 2.00x + 0.00
+*/

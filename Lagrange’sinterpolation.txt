@@ -1,0 +1,47 @@
+/*1. Write a program to approximate the functional value at any given x from given n no. of data using Lagrange’s interpolation.
+
+*/
+
+#include <stdio.h>
+
+int main() {
+    int n, i, j;
+    float x[10], y[10], xp, yp = 0, p;
+
+    printf("Enter the number of data points: ");
+    scanf("%d", &n);
+
+    printf("Enter the x and y values:\n");
+    for (i = 0; i < n; i++) {
+        scanf("%f %f", &x[i], &y[i]);
+    }
+
+    printf("Enter the value of x to approximate: ");
+    scanf("%f", &xp);
+
+    for (i = 0; i < n; i++) {
+        p = 1;
+        for (j = 0; j < n; j++) {
+            if (i != j) {
+                p *= (xp - x[j]) / (x[i] - x[j]);
+            }
+        }
+        yp += p * y[i];
+    }
+
+    printf("Approximated value at x = %.2f is y = %.4f\n", xp, yp);
+    return 0;
+}
+
+/*
+
+Enter the number of data points: 3
+Enter the x and y values:
+1 1
+2 4
+3 9
+Enter the value of x to approximate: 1.5
+
+output
+Approximated value at x = 1.50 is y = 2.2500
+*/

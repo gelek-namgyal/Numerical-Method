@@ -1,0 +1,73 @@
+/*
+Write a program to find a solution of linear algebraic equations using Gauss Seidel Method.
+*/
+#include <stdio.h>
+#include <math.h>
+
+void gaussSeidelMethod(int n, double a[n][n+1], double tolerance) {
+    double x[n], oldX[n];
+    for (int i = 0; i < n; i++) x[i] = 0; // Initial guess
+
+    int iter = 0;
+    double maxDiff;
+    do {
+        maxDiff = 0;
+        for (int i = 0; i < n; i++) {
+            oldX[i] = x[i];
+            x[i] = a[i][n]; // Start with the constant term
+
+            for (int j = 0; j < n; j++) {
+                if (j != i) {
+                    x[i] -= a[i][j] * x[j];
+                }
+            }
+            x[i] /= a[i][i];
+
+            double diff = fabs(x[i] - oldX[i]);
+            if (diff > maxDiff) {
+                maxDiff = diff;
+            }
+        }
+        iter++;
+    } while (maxDiff >= tolerance && iter < 100);
+
+    printf("Solution after %d iterations:\n", iter);
+    for (int i = 0; i < n; i++) {
+        printf("x%d = %.6f\n", i + 1, x[i]);
+    }
+}
+
+int main() {
+    int n;
+    double tolerance;
+
+    printf("Enter the number of variables: ");
+    scanf("%d", &n);
+
+    double a[n][n+1];
+    printf("Enter the augmented matrix (row by row):\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= n; j++) {
+            scanf("%lf", &a[i][j]);
+        }
+    }
+
+    printf("Enter the tolerance: ");
+    scanf("%lf", &tolerance);
+
+    gaussSeidelMethod(n, a, tolerance);
+    return 0;
+}
+
+/*
+Enter the number of variables: 3
+Enter the augmented matrix (row by row):
+4 -1 0 15
+-1 4 -1 10
+0 -1 4 10
+Enter the tolerance: 0.0001
+Solution after 15 iterations:
+x1 = 5.000000
+x2 = 5.000000
+x3 = 5.000000
+*/

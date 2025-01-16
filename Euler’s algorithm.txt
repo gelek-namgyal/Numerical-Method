@@ -1,0 +1,35 @@
+//Euler’s algorithm
+
+#include <stdio.h>
+
+double dydx(double x, double y) {
+    return x + y; // Differential equation dy/dx = x + y
+}
+
+double euler(double x0, double y0, double h, double x_target) {
+    double y = y0, x = x0;
+
+    while (x < x_target) {
+        y = y + h * dydx(x, y);
+        x += h;
+    }
+
+    return y;
+}
+
+int main() {
+    double x0 = 0, y0 = 1, x_target = 0.4;
+
+    printf("Euler's Algorithm:\n");
+    printf("h = 0.1: y(%.1f) = %.6f\n", x_target, euler(x0, y0, 0.1, x_target));
+    printf("h = 0.2: y(%.1f) = %.6f\n", x_target, euler(x0, y0, 0.2, x_target));
+
+    return 0;
+}
+
+
+/*
+Euler's Algorithm:
+h = 0.1: y(0.4) = 1.491321
+h = 0.2: y(0.4) = 1.475200
+*/

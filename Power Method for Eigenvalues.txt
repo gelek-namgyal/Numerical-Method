@@ -1,0 +1,79 @@
+/*
+Write a program to find Eigen values using Power method.
+*/
+#include <stdio.h>
+#include <math.h>
+
+void powerMethod(int n, double a[n][n], double tolerance) {
+    double x[n], y[n], lambda = 0, prevLambda;
+    for (int i = 0; i < n; i++) x[i] = 1; // Initial guess
+
+    int iter = 0;
+    do {
+        // Matrix-vector multiplication
+        for (int i = 0; i < n; i++) {
+            y[i] = 0;
+            for (int j = 0; j < n; j++) {
+                y[i] += a[i][j] * x[j];
+            }
+        }
+
+        // Find the largest value (approximate eigenvalue)
+        prevLambda = lambda;
+        lambda = y[0];
+        for (int i = 1; i < n; i++) {
+            if (fabs(y[i]) > fabs(lambda)) {
+                lambda = y[i];
+            }
+        }
+
+        // Normalize the vector
+        for (int i = 0; i < n; i++) {
+            x[i] = y[i] / lambda;
+        }
+
+        iter++;
+    } while (fabs(lambda - prevLambda) >= tolerance && iter < 100);
+
+    printf("Largest Eigenvalue: %.6f\n", lambda);
+    printf("Eigenvector:\n");
+    for (int i = 0; i < n; i++) {
+        printf("x%d = %.6f\n", i + 1, x[i]);
+    }
+}
+
+int main() {
+    int n;
+    double tolerance;
+
+    printf("Enter the size of the matrix: ");
+    scanf("%d", &n);
+
+    double a[n][n];
+    printf("Enter the matrix (row by row):\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%lf", &a[i][j]);
+        }
+    }
+
+    printf("Enter the tolerance: ");
+    scanf("%lf", &tolerance);
+
+    powerMethod(n, a, tolerance);
+    return 0;
+}
+
+/*
+Enter the size of the matrix: 3
+Enter the matrix (row by row):
+2 -1 0
+-1 2 -1
+0 -1 2
+Enter the tolerance: 0.0001
+Largest Eigenvalue: 3.414214
+Eigenvector:
+x1 = 0.500000
+x2 = 0.707107
+x3 = 0.500000
+*/

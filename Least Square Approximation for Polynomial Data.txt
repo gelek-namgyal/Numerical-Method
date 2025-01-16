@@ -1,0 +1,131 @@
+/*
+Write a program to implement least square approximation polynomial data.
+*/
+#include <stdio.h>
+#include <math.h>
+
+void printMatrix(double matrix[10][10], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%lf ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void multiplyMatrix(double matrix1[10][10], double matrix2[10][10], double result[10][10], int row1, int col1, int col2) {
+    for (int i = 0; i < row1; i++) {
+        for (int j = 0; j < col2; j++) {
+            result[i][j] = 0;
+            for (int k = 0; k < col1; k++) {
+                result[i][j] += matrix1[i][k] * matrix2[k][j];
+            }
+        }
+    }
+}
+
+void transposeMatrix(double matrix[10][10], double result[10][10], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result[j][i] = matrix[i][j];
+        }
+    }
+}
+
+void solveSystem(double matrix[10][10], double result[10], int n) {
+    for (int i = 0; i < n; i++) {
+        int maxRow = i;
+        for (int k = i + 1; k < n; k++) {
+            if (fabs(matrix[k][i]) > fabs(matrix[maxRow][i])) {
+                maxRow = k;
+            }
+        }
+
+        for (int k = i; k < n; k++) {
+            double temp = matrix[maxRow][k];
+            matrix[maxRow][k] = matrix[i][k];
+            matrix[i][k] = temp;
+        }
+
+        double temp = result[maxRow];
+        result[maxRow] = result[i];
+        result[i] = temp;
+
+        for (int k = i + 1; k < n; k++) {
+            double factor = matrix[k][i] / matrix[i][i];
+            for (int j = i; j < n; j++) {
+                matrix[k][j] -= factor * matrix[i][j];
+            }
+            result[k] -= factor * result[i];
+        }
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        for (int j = i + 1; j < n; j++) {
+            result[i] -= matrix[i][j] * result[j];
+        }
+        result[i] /= matrix[i][i];
+    }
+}
+
+int main() {
+    int n, m;
+    printf("Enter the number of data points: ");
+    scanf("%d", &n);
+
+    printf("Enter the degree of the polynomial: ");
+    scanf("%d", &m);
+
+    double x[n], y[n];
+    printf("Enter the data points (x and y values):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%lf %lf", &x[i], &y[i]);
+    }
+
+    double matrix[10][10] = {0};  // System of equations matrix
+    double result[10] = {0};       // Polynomial coefficients
+
+    // Step 1: Create the Vandermonde matrix (matrix[0...m][0...m])
+    for (int i = 0; i < m + 1; i++) {
+        for (int j = 0; j < m + 1; j++) {
+            for (int k = 0; k < n; k++) {
+                matrix[i][j] += pow(x[k], i + j);
+            }
+        }
+    }
+
+    // Step 2: Create the right-hand side vector (y values)
+    double rhs[10] = {0};
+    for (int i = 0; i < m + 1; i++) {
+        for (int j = 0; j < n; j++) {
+            rhs[i] += pow(x[j], i) * y[j];
+        }
+    }
+
+    // Step 3: Solve the system of equations to find the polynomial coefficients
+    solveSystem(matrix, rhs, m + 1);
+
+    printf("The least squares polynomial equation is:\n");
+    for (int i = 0; i <= m; i++) {
+        printf("Coefficient of x^%d: %.4f\n", i, rhs[i]);
+    }
+
+    return 0;
+}
+
+/*
+Enter the number of data points: 5
+Enter the degree of the polynomial: 2
+Enter the data points (x and y values):
+1 2
+2 3
+3 5
+4 7
+5 11
+
+output
+The least squares polynomial equation is:
+Coefficient of x^0: 0.8000
+Coefficient of x^1: 1.0000
+Coefficient of x^2: 0.2000
+*/

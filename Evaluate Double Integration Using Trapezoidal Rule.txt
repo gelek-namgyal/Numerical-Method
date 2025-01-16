@@ -1,0 +1,55 @@
+/*
+Write a program to evaluate double integration of a function using Trapezoidal rule.
+*/
+
+#include <stdio.h>
+
+// Define the function for double integration
+double func(double x, double y) {
+    return x * y; // Example: f(x, y) = x * y
+}
+
+double trapezoidal_rule(double a, double b, double c, double d, int nx, int ny) {
+    double hx = (b - a) / nx;
+    double hy = (d - c) / ny;
+    double sum = 0.0;
+
+    for (int i = 0; i <= nx; i++) {
+        for (int j = 0; j <= ny; j++) {
+            double x = a + i * hx;
+            double y = c + j * hy;
+            double weight = 1.0;
+
+            if (i == 0 || i == nx) weight /= 2;
+            if (j == 0 || j == ny) weight /= 2;
+
+            sum += weight * func(x, y);
+        }
+    }
+
+    return sum * hx * hy;
+}
+
+int main() {
+    double a, b, c, d;
+    int nx, ny;
+
+    printf("Enter the limits for x (a and b): ");
+    scanf("%lf %lf", &a, &b);
+    printf("Enter the limits for y (c and d): ");
+    scanf("%lf %lf", &c, &d);
+    printf("Enter the number of intervals for x and y: ");
+    scanf("%d %d", &nx, &ny);
+
+    double result = trapezoidal_rule(a, b, c, d, nx, ny);
+    printf("Double Integration result using Trapezoidal Rule: %.6f\n", result);
+
+    return 0;
+}
+
+/*
+Enter the limits for x (a and b): 0 1
+Enter the limits for y (c and d): 0 1
+Enter the number of intervals for x and y: 4 4
+Double Integration result using Trapezoidal Rule: 0.250000
+*/

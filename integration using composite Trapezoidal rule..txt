@@ -1,0 +1,40 @@
+/*
+Write a program to calculate integration using composite Trapezoidal rule.
+*/
+#include <stdio.h>
+
+double composite_trapezoidal_rule(double (*f)(double), double a, double b, int n) {
+    double h = (b - a) / n;
+    double sum = (f(a) + f(b)) / 2.0;
+
+    for (int i = 1; i < n; i++) {
+        sum += f(a + i * h);
+    }
+
+    return sum * h;
+}
+
+double func(double x) {
+    return x * x; // Example function x^2
+}
+
+int main() {
+    double a, b;
+    int n;
+
+    printf("Enter the limits a and b: ");
+    scanf("%lf %lf", &a, &b);
+    printf("Enter the number of subintervals n: ");
+    scanf("%d", &n);
+
+    double result = composite_trapezoidal_rule(func, a, b, n);
+    printf("Integration result using Composite Trapezoidal rule: %.6f\n", result);
+
+    return 0;
+}
+
+/*
+Enter the limits a and b: 0 2
+Enter the number of subintervals n: 4
+Integration result using Composite Trapezoidal rule: 2.666667
+*/

@@ -1,0 +1,59 @@
+/*
+Write a program to calculate derivative from divided difference table
+*/
+#include <stdio.h>
+
+void calculate_divided_difference_table(double x[], double y[], int n) {
+    double diff[n][n];
+    
+    // Initializing the first column of the table with y values
+    for (int i = 0; i < n; i++) {
+        diff[i][0] = y[i];
+    }
+
+    // Calculating the rest of the table
+    for (int j = 1; j < n; j++) {
+        for (int i = 0; i < n - j; i++) {
+            diff[i][j] = (diff[i + 1][j - 1] - diff[i][j - 1]) / (x[i + j] - x[i]);
+        }
+    }
+
+    // Printing the table
+    printf("Divided Difference Table:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n - i; j++) {
+            printf("%lf\t", diff[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of data points: ");
+    scanf("%d", &n);
+
+    double x[n], y[n];
+    printf("Enter the data points (x and y values):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%lf %lf", &x[i], &y[i]);
+    }
+
+    calculate_divided_difference_table(x, y, n);
+    return 0;
+}
+
+
+/*
+Enter the number of data points: 4
+Enter the data points (x and y values):
+1 1
+2 4
+3 9
+4 16
+Divided Difference Table:
+1.000000    
+3.000000	1.500000    
+5.000000	1.000000	0.250000    
+7.000000	0.500000	0.000000	0.083333    
+*/

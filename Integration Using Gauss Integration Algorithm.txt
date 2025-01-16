@@ -1,0 +1,38 @@
+/*
+Write a program to evaluate integration of a function using Gauss integration algorithm.
+*/
+#include <stdio.h>
+#include <math.h>
+
+// Define the function to integrate
+double func(double x) {
+    return x * x; // Example function x^2
+}
+
+int main() {
+    int n;
+    double a, b, sum = 0.0;
+
+    // Gauss points and weights for 2-point Gauss quadrature
+    double gauss_points[] = {-0.5773502692, 0.5773502692};
+    double gauss_weights[] = {1.0, 1.0};
+
+    printf("Enter the limits a and b: ");
+    scanf("%lf %lf", &a, &b);
+
+    // Transform the function to [a, b]
+    for (int i = 0; i < 2; i++) {
+        double x = ((b - a) / 2) * gauss_points[i] + (a + b) / 2;
+        sum += gauss_weights[i] * func(x);
+    }
+
+    double result = (b - a) / 2 * sum;
+    printf("Integration result using Gauss Integration Algorithm: %.6f\n", result);
+
+    return 0;
+}
+
+/*
+Enter the limits a and b: 0 2
+Integration result using Gauss Integration Algorithm: 2.666667
+*/

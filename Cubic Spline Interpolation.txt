@@ -1,0 +1,84 @@
+/*
+Write a program to approximate the functional value at any given x from given n no. of data using Cubic Spline interpolation.
+
+*/
+
+#include <stdio.h>
+#include <math.h>
+
+void cubicSplineInterpolation(int n, double x[], double y[], double xp) {
+    double h[n], alpha[n], l[n+1], mu[n], z[n+1];
+    double a[n], b[n], c[n], d[n];
+
+    // Step 1: Compute the step sizes
+    for (int i = 0; i < n - 1; i++) {
+        h[i] = x[i + 1] - x[i];
+    }
+
+    // Step 2: Calculate alpha values
+    for (int i = 1; i < n - 1; i++) {
+        alpha[i] = (3 * (y[i + 1] - y[i]) / h[i]) - (3 * (y[i] - y[i - 1]) / h[i - 1]);
+    }
+
+    // Step 3: Solve the system of equations
+    l[0] = 1;
+    mu[0] = 0;
+    z[0] = 0;
+
+    for (int i = 1; i < n - 1; i++) {
+        l[i] = 2 * (x[i + 1] - x[i - 1]) - h[i - 1] * mu[i - 1];
+        mu[i] = h[i] / l[i];
+        z[i] = (alpha[i] - h[i - 1] * z[i - 1]) / l[i];
+    }
+
+    l[n - 1] = 1;
+    z[n] = 0;
+    c[n - 1] = 0;
+
+    // Step 4: Back substitution to find the coefficients
+    for (int j = n - 2; j >= 0; j--) {
+        c[j] = z[j] - mu[j] * c[j + 1];
+        b[j] = (y[j + 1] - y[j]) / h[j] - h[j] * (c[j + 1] + 2 * c[j]) / 3;
+        d[j] = (c[j + 1] - c[j]) / (3 * h[j]);
+        a[j] = y[j];
+    }
+
+    // Step 5: Evaluate the spline at the point xp
+    int j = 0;
+    while (xp > x[j + 1]) j++;
+    double result = a[j] + b[j] * (xp - x[j]) + c[j] * pow(xp - x[j], 2) + d[j] * pow(xp - x[j], 3);
+
+    printf("The interpolated value at x = %.2f is y = %.4f\n", xp, result);
+}
+
+int main() {
+    int n;
+    printf("Enter the number of data points: ");
+    scanf("%d", &n);
+
+    double x[n], y[n], xp;
+    printf("Enter the data points (x and y values):\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%lf %lf", &x[i], &y[i]);
+    }
+
+    printf("Enter the value of x to approximate: ");
+    scanf("%lf", &xp);
+
+    cubicSplineInterpolation(n, x, y, xp);
+    return 0;
+}
+
+
+/*
+Enter the number of data points: 4
+Enter the data points (x and y values):
+1 1
+2 4
+3 9
+4 16
+Enter the value of x to approximate: 2.5
+
+output
+The interpolated value at x = 2.50 is y = 6.2500
+*/

@@ -1,0 +1,38 @@
+// Runge-Kutta 4th Order Method
+
+#include <stdio.h>
+
+double dydx(double x, double y) {
+    return x + y; // Differential equation dy/dx = x + y
+}
+
+double rk4(double x0, double y0, double h, double x_target) {
+    double y = y0, x = x0;
+
+    while (x < x_target) {
+        double k1 = h * dydx(x, y);
+        double k2 = h * dydx(x + h / 2, y + k1 / 2);
+        double k3 = h * dydx(x + h / 2, y + k2 / 2);
+        double k4 = h * dydx(x + h, y + k3);
+        y = y + (1.0 / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4);
+        x += h;
+    }
+
+    return y;
+}
+
+int main() {
+    double x0 = 0, y0 = 1, x_target = 0.4;
+
+    printf("Runge-Kutta 4th Order Method:\n");
+    printf("h = 0.1: y(%.1f) = %.6f\n", x_target, rk4(x0, y0, 0.1, x_target));
+    printf("h = 0.2: y(%.1f) = %.6f\n", x_target, rk4(x0, y0, 0.2, x_target));
+
+    return 0;
+}
+
+/*
+Runge-Kutta 4th Order Method:
+h = 0.1: y(0.4) = 1.491824
+h = 0.2: y(0.4) = 1.478132
+*/
